@@ -1,12 +1,19 @@
 создать новый проект в Google Cloud Platform, например postgres2022-, где yyyymmdd год, месяц и день вашего рождения (имя проекта должно быть уникально на уровне GCP)
-
-	Проект был создан в Яндекс.Облако
-
 дать возможность доступа к этому проекту пользователю ifti@yandex.ru с ролью Project Editor
 далее создать инстанс виртуальной машины Compute Engine с дефолтными параметрами
 добавить свой ssh ключ в GCE metadata
+
+	Проект postgres2022 был создан в Яндекс.Облако. Создана виртуальная машина с 2 vCPU, 2 Гб ОЗУ, 10 Гб HDD
+
 зайти удаленным ssh (первая сессия), не забывайте про ssh-add
+
+    При создании ВМ был импортирован публичный ssh-ключ от рабочей станции
+
 поставить PostgreSQL
+
+    sudo apt update && sudo apt upgrade -y && sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && sudo apt-get update && sudo apt-get -y install postgresql
+
+
 зайти вторым ssh (вторая сессия)
 запустить везде psql из под пользователя postgres
 выключить auto commit
