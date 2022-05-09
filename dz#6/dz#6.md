@@ -19,17 +19,69 @@ Ver Cluster Port Status Owner    Data directory              Log file
 
 
 зайдите из под пользователя postgres в psql и сделайте произвольную таблицу с произвольным содержимым postgres=# create table test(c1 text); postgres=# insert into test values('1'); \q
+```
+postgres=# create table test(c1 text);
+CREATE TABLE
+postgres=# insert into test values('1'); \q
+INSERT 0 1
+```
+
+
+
 остановите postgres например через sudo -u postgres pg_ctlcluster 14 main stop
+```
+Ver Cluster Port Status Owner    Data directory              Log file
+14  main    5432 down   postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
+```
+
+
 создайте новый standard persistent диск GKE через Compute Engine -> Disks в том же регионе и зоне что GCE инстанс размером например 10GB
+
+    Создан диск размером 5 Гб
+
+
 добавьте свеже-созданный диск к виртуальной машине - надо зайти в режим ее редактирования и дальше выбрать пункт attach existing disk
+
+    Выполнено
+
+
 проинициализируйте диск согласно инструкции и подмонтировать файловую систему, только не забывайте менять имя диска на актуальное, в вашем случае это скорее всего будет /dev/sdb - https://www.digitalocean.com/community/tutorials/how-to-partition-and-format-storage-devices-in-linux
+
+    Выполнено. Диск был /dev/vdb
+
+
 перезагрузите инстанс и убедитесь, что диск остается примонтированным (если не так смотрим в сторону fstab)
+
+    Диск на месте
+
+
 сделайте пользователя postgres владельцем /mnt/data - chown -R postgres:postgres /mnt/data/
+
+    Выполнено
+
+
 перенесите содержимое /var/lib/postgres/14 в /mnt/data - mv /var/lib/postgresql/14 /mnt/data
+
+    Выполнено
+
+
 попытайтесь запустить кластер - sudo -u postgres pg_ctlcluster 14 main start
 напишите получилось или нет и почему
+
+    Кластер не запустился, так как отсутствует директория с данными
+
+
 задание: найти конфигурационный параметр в файлах раположенных в /etc/postgresql/14/main который надо поменять и поменяйте его
 напишите что и почему поменяли
+```
+Необходимо указать новый путь к директории с данными.
+Была изменена строка:
+data_directory = '/var/lib/postgresql/14/main'
+на
+data_directory = '/mnt/data/14/main'
+```
+
+
 попытайтесь запустить кластер - sudo -u postgres pg_ctlcluster 14 main start
 напишите получилось или нет и почему
 зайдите через через psql и проверьте содержимое ранее созданной таблицы
