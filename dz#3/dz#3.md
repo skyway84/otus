@@ -18,7 +18,7 @@
 
 • сделать каталог /var/lib/postgres
 
-    /var/lib/postgres
+    sudo mkdir /var/lib/postgres
 
 
 • развернуть контейнер с PostgreSQL 14 смонтировав в него /var/lib/postgres
@@ -40,10 +40,9 @@
 таблицу с парой строк
 
     ```postgres=# create table persons(id serial, first_name text, second_name text); insert into persons(first_name, second_name) values('ivan', 'ivanov'); insert into persons(first_name, second_name) values('petr', 'petrov');
-CREATE TABLE
-INSERT 0 1
-INSERT 0 1
-    ```
+    CREATE TABLE
+    INSERT 0 1
+    INSERT 0 1```
 
 
 • подключится к контейнеру с сервером с ноутбука/компьютера извне инстансов GCP
