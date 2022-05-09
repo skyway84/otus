@@ -39,15 +39,15 @@
 • подключится из контейнера с клиентом к контейнеру с сервером и сделать
 таблицу с парой строк
 
-    ```postgres=# create table persons(id serial, first_name text, second_name text); insert into persons(first_name, second_name) values('ivan', 'ivanov'); insert into persons(first_name, second_name) values('petr', 'petrov');
+    postgres=# create table persons(id serial, first_name text, second_name text); insert into persons(first_name, second_name) values('ivan', 'ivanov'); insert into persons(first_name, second_name) values('petr', 'petrov');
     CREATE TABLE
     INSERT 0 1
-    INSERT 0 1```
+    INSERT 0 1
 
 
 • подключится к контейнеру с сервером с ноутбука/компьютера извне инстансов GCP
 
-    Подключился к postgres с домашнего компьютера из dbeaver без дополнительных настроек инстранса. Настройки по-умолчанию docker-образа postgres разрешают подключение отовсюду с паролем, служба postgres слушает все интерфейсы.
+    Подключился к postgres с домашнего компьютера из dbeaver без дополнительных настроек инстанса. Настройки по-умолчанию docker-образа postgres разрешают подключение отовсюду с паролем, сервис Postgres слушает все интерфейсы.
 
 
 • удалить контейнер с сервером
