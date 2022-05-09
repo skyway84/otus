@@ -3,7 +3,7 @@
 
 создайте виртуальную машину c Ubuntu 20.04 LTS (bionic) в GCE типа e2-medium в default VPC в любом регионе и зоне, например us-central1-a
 
-    Виртуальная машина создана в Яндекс.Облако
+    Виртуальная машина postgres2022 создана в Яндекс.Облако
 
 
 поставьте на нее PostgreSQL 14 через sudo apt
@@ -37,7 +37,7 @@ Ver Cluster Port Status Owner    Data directory              Log file
 
 создайте новый standard persistent диск GKE через Compute Engine -> Disks в том же регионе и зоне что GCE инстанс размером например 10GB
 
-    Создан диск размером 5 Гб
+    Создан диск размером 5 Гбс названием postgres-disk2
 
 
 добавьте свеже-созданный диск к виртуальной машине - надо зайти в режим ее редактирования и дальше выбрать пункт attach existing disk
@@ -108,10 +108,27 @@ postgres=# select * from test;
     1.1 Остановил кластер postgres - sudo -u postgres pg_ctlcluster 14 main stop
     1.2 Размонтировал раздел с базой данных - umount /mnt/data
     1.3 Выключил ВМ
-Создал ВМ в Яндекс.Облако
-
-
-
-
-
-
+    1.4 В консоли Яндекс.Облако отсоединил диск postgres-disk2
+2. Создание новго инстанса
+    2.1 Создал ВМ postgres2022-2 в Яндекс.Облако
+    2.2 Установил Postgres
+    2.3 Остановил кластер Postgres
+    2.4 Удалил файлы с данными из /var/lib/postresql - rm -R /var/lib/postgresql/*
+3. Подключение внешнего диска и настройка работы Postgres
+    3.1 В консоли Яндекс.Облако присоединил диск postgres-disk2 к ВМ postgres2022-2
+    3.2 Примонтировал /dev/vdb1 в /var/lib/postgresql (в fstab, потом 'mount -a')
+    3.3 Сменил владельца каталога /var/lib/postgresql на пользователя postgres - chown -R postgres:postgres /var/lib/postgresql
+    3.4 Запустил кластер Postgres:
+            Ver Cluster Port Status Owner    Data directory              Log file
+            14  main    5432 online postgres /var/lib/postgresql/14/main /var/log/postgresql/postgresql-14-main.log
+    3.5 Проверил наличие записи в таблице. Запись на месте
+            root@postgres2022-2:~# su - postgres
+            postgres@postgres2022-2:~$ psql
+            psql (14.2 (Ubuntu 14.2-1.pgdg20.04+1+b1))
+            Type "help" for help.
+            
+            postgres=# select * from test;
+             c1 
+            ----
+             1
+            (1 row)
