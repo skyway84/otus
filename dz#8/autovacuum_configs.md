@@ -28,20 +28,6 @@ alter table pgbench_history set (autovacuum_vacuum_threshold = 500);
 alter table pgbench_history set (autovacuum_vacuum_scale_factor = 0);
 
 
-Конфигурация 1.1
-autovacuum_vacuum_threshold = 1000
-autovacuum_vacuum_scale_factor = 0
-
-alter table pgbench_branches set (autovacuum_vacuum_threshold = 1000);
-alter table pgbench_branches set (autovacuum_vacuum_scale_factor = 0);
-alter table pgbench_tellers set (autovacuum_vacuum_threshold = 1000);
-alter table pgbench_tellers set (autovacuum_vacuum_scale_factor = 0);
-alter table pgbench_accounts set (autovacuum_vacuum_threshold = 1000);
-alter table pgbench_accounts set (autovacuum_vacuum_scale_factor = 0);
-alter table pgbench_history set (autovacuum_vacuum_threshold = 1000);
-alter table pgbench_history set (autovacuum_vacuum_scale_factor = 0);
-
-
 Конфигурация 2
 autovacuum_vacuum_threshold = 25
 autovacuum_vacuum_scale_factor = 0
@@ -54,6 +40,7 @@ alter table pgbench_accounts set (autovacuum_vacuum_threshold = 25);
 alter table pgbench_accounts set (autovacuum_vacuum_scale_factor = 0);
 alter table pgbench_history set (autovacuum_vacuum_threshold = 25);
 alter table pgbench_history set (autovacuum_vacuum_scale_factor = 0);
+
 
 Конфигурация 3
 autovacuum_vacuum_threshold = 10
@@ -124,38 +111,4 @@ alter table pgbench_accounts set (autovacuum_vacuum_threshold = 500);
 alter table pgbench_accounts set (autovacuum_vacuum_scale_factor = 0);
 alter table pgbench_history set (autovacuum_vacuum_threshold = 500);
 alter table pgbench_history set (autovacuum_vacuum_scale_factor = 0);
-
-
-
-
-Конфигурация 4
-autovacuum = off
-
-Конфигурация 5
-autovacuum_max_workers 10
-autovacuum_vacuum_threshold = 50
-autovacuum_analyze_threshold = 10
-autovacuum_vacuum_scale_factor = 0.05
-autovacuum_analyze_scale_factor = 0.05.
-vacuum_freeze_min_age = 5000000
-vacuum_freeze_table_age = 15000000
-
-Конфигурация 6
-autovacuum_analyze_threshold = '10'
-autovacuum_vacuum_scale_factor = '0.05'
-autovacuum_analyze_scale_factor = '0.05'
-autovacuum_max_workers = '4'
-autovacuum_vacuum_threshold = '25'
-
-Конфигурация 7
-autovacuum_vacuum_scale_factor = '0.05'
-autovacuum_analyze_scale_factor = '0.05'
-autovacuum_max_workers = '4'
-autovacuum_vacuum_threshold = '100'
-autovacuum_analyze_threshold = '100'
-
-
-
-
-
 
