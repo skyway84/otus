@@ -1,0 +1,74 @@
+# Дроздов Юрий.
+# Домашнее задание к занятию 20.
+
+
+Задача: Секционировать большую таблицу из демо базы flights
+
+
+Создал базу flights путем выполнения sql-скрипта.
+
+Секционировать буду таблицу bookings по диапазону дат (поле book_date)
+
+demo=# \d bookings
+                        Table "bookings.bookings"
+    Column    |           Type           | Collation | Nullable | Default 
+--------------+--------------------------+-----------+----------+---------
+ book_ref     | character(6)             |           | not null | 
+ book_date    | timestamp with time zone |           | not null | 
+ total_amount | numeric(10,2)            |           | not null | 
+Indexes:
+    "bookings_pkey" PRIMARY KEY, btree (book_ref)
+Referenced by:
+    TABLE "tickets" CONSTRAINT "tickets_book_ref_fkey" FOREIGN KEY (book_ref) REFERENCES bookings(book_ref)
+
+
+
+Выясняю самые ранние даты:
+demo=# select min(book_date) from bookings;
+          min           
+------------------------
+ 2017-04-21 11:23:00+00
+(1 row)
+
+
+Выясняю самые поздние даты:
+demo=# select max(book_date) from bookings;
+          max           
+------------------------
+ 2017-08-15 15:00:00+00
+(1 row)
+
+
+Создаю секционированную таблицу:
+demo=# CREATE TABLE bookings_range (
+       book_ref     character(6),
+       book_date    timestamptz,
+       total_amount numeric(10,2)
+   ) PARTITION BY RANGE(book_date);
+
+
+Создаю секции:
+
+demo=# CREATE TABLE bookings_range_201704 PARTITION OF bookings_range FOR VALUES FROM ('2017-04-01'::timestamptz) TO ('2017-05-01'::timestamptz);
+demo=# CREATE TABLE bookings_range_201705 PARTITION OF bookings_range FOR VALUES FROM ('2017-05-01'::timestamptz) TO ('2017-06-01'::timestamptz);
+demo=# CREATE TABLE bookings_range_201706 PARTITION OF bookings_range FOR VALUES FROM ('2017-06-01'::timestamptz) TO ('2017-07-01'::timestamptz);
+demo=# CREATE TABLE bookings_range_201707 PARTITION OF bookings_range FOR VALUES FROM ('2017-07-01'::timestamptz) TO ('2017-08-01'::timestamptz);
+demo=# CREATE TABLE bookings_range_201708 PARTITION OF bookings_range FOR VALUES FROM ('2017-08-01'::timestamptz) TO ('2017-09-01'::timestamptz);
+
+
+Заполняю секционированную таблицу данными из старой таблицы:
+INSERT INTO bookings_range SELECT * FROM bookings;
+
+
+Проверяю, что записи распределились между секциями:
+demo=# SELECT tableoid::regclass, count(*) FROM bookings_range GROUP BY tableoid;
+       tableoid        | count  
+-----------------------+--------
+ bookings_range_201704 |   4889
+ bookings_range_201705 | 163870
+ bookings_range_201706 | 165213
+ bookings_range_201707 | 171671
+ bookings_range_201708 |  87790
+(5 rows)
+
+
